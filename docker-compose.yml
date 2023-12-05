@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./menu_tree_web/Dockerfile
+    restart: always
+    container_name: web
+    command: >
+      sh -c "python3 manage.py migrate &&
+             python3 manage.py collectstatic --noinput &&
+             exec uvicorn core.asgi:application --host 0.0.0.0 --port $$WEB_PORT --log-level debug"
+    volumes:
+      - menu_tree_static_value:/app/web-static/
+      - menu_tree_media_value:/app/web-media/
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    container_name: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - menu_tree_pgdata:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 80s
+
+volumes:
+  menu_tree_pgdata:
+    name: menu_tree_pgdata
+  menu_tree_static_value:
+    name: menu_tree_static_value
+  menu_tree_media_value:
+    name: menu_tree_media_value

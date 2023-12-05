@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "menu-tree"
+version = "0.1.0"
+description = ""
+authors = ["kirillovme <54503407+kirillovme@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.7"
+psycopg2-binary = "^2.9.9"
+uvicorn = "^0.24.0.post1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

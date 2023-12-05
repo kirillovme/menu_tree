@@ -1,0 +1,14 @@
+{% for item, children in menu_structure %}
+    <li {% if item.is_active %}class="active"{% endif %}>
+        <a href="{{ item.url_resolved }}">{{ item.title }}</a>
+        {% if children %}
+            <ul>
+                {% for child, grandchildren in children %}
+                    <li {% if child.is_active %}class="active"{% endif %}>
+                        <a href="{{ child.url_resolved }}">{{ child.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}
